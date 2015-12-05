@@ -154,14 +154,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public List<Transaction> getAllTransactionLogs() {
         List<Transaction> transactionList=new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
         Cursor res =  db.rawQuery("SELECT * FROM " + TABLE_TRANSACTION + " ;", null);
         while(res.isAfterLast() == false){
             int idIndex= res.getColumnIndex(COLUMN_ID);
             int bankIndex=res.getColumnIndex(COLUMN_BANKNAME);
             int accHolderIndex=res.getColumnIndex(COLUMN_ACHOLDERNAME);
             int balanceIndex=res.getColumnIndex(COLUMN_BALANCE);
-        }
+        }*/
         return transactionList;
     }
 

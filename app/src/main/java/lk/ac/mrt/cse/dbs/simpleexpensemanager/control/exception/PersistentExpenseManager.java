@@ -21,14 +21,14 @@ public class PersistentExpenseManager extends ExpenseManager{
 
     @Override
     public void setup() {
-        /*** Begin generating dummy data for In-Memory implementation ***/
 
-        TransactionDAO persistenseTransactionDAO = new PersistentTransactionDAO();
+
+        TransactionDAO persistenseTransactionDAO = new PersistentTransactionDAO(context);
         setTransactionsDAO(persistenseTransactionDAO);
 
         AccountDAO persistentAccountDAO = new PersistentAccountDAO(context);
         setAccountsDAO(persistentAccountDAO);
-
+        /*** Begin generating dummy data for In-Memory implementation ***/
         // dummy data
         Account dummyAcct1 = new Account("12345A", "Yoda Bank", "Anakin Skywalker", 10000.0);
         Account dummyAcct2 = new Account("78945Z", "Clone BC", "Obi-Wan Kenobi", 80000.0);
