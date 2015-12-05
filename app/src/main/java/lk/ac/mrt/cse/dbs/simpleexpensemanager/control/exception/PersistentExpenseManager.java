@@ -6,7 +6,6 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.ExpenseManager;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.AccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.TransactionDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl.PersistentAccountDAO;
-import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl.PersistentTransactionDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 
 /**
@@ -23,7 +22,7 @@ public class PersistentExpenseManager extends ExpenseManager{
     public void setup() {
 
 
-        TransactionDAO persistenseTransactionDAO = new PersistentTransactionDAO(context);
+        TransactionDAO persistenseTransactionDAO = new PersistentTransactionDAO1(context);
         setTransactionsDAO(persistenseTransactionDAO);
 
         AccountDAO persistentAccountDAO = new PersistentAccountDAO(context);
