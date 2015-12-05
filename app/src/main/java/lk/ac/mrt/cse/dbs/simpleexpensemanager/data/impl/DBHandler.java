@@ -78,7 +78,7 @@ public class DBHandler extends SQLiteOpenHelper {
         List<String> accList=new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "SELECT "+COLUMN_ACCOUNT_ID + " FROM " +TABLE_ACCOUNT + " ;",null);
-        while(res.isAfterLast() == false){
+        while(!res.isAfterLast()){
             accList.add(res.getString(res.getColumnIndex(COLUMN_ACCOUNT_ID)));
             res.moveToNext();
         }
@@ -90,13 +90,13 @@ public class DBHandler extends SQLiteOpenHelper {
         List<Account> accList=new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery("SELECT " + COLUMN_ACCOUNT_ID + " FROM " + TABLE_ACCOUNT + " ;", null);
-        while(res.isAfterLast() == false){
+        while(!res.isAfterLast()){
             int idIndex= res.getColumnIndex(COLUMN_ACCOUNT_ID);
             int bankIndex=res.getColumnIndex(COLUMN_BANK_NAME);
             int accHolderIndex=res.getColumnIndex(COLUMN_AC_HOLDER_NAME);
             int balanceIndex=res.getColumnIndex(COLUMN_BALANCE);
 
-            Account account=new Account(res.getString(idIndex),res.getString(balanceIndex),res.getString(accHolderIndex),Double.valueOf(res.getString(balanceIndex)));
+            Account account=new Account(res.getString(idIndex),res.getString(bankIndex),res.getString(accHolderIndex),Double.valueOf(res.getString(balanceIndex)));
             accList.add(account);
             res.moveToNext();
         }
@@ -106,7 +106,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public Account getAccount(String accountNo){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "SELECT * FROM "+TABLE_ACCOUNT + " WHERE " +COLUMN_ACCOUNT_ID+"="+accountNo+ " ;",null);
+        Cursor res =  db.rawQuery( "SELECT * FROM "+TABLE_ACCOUNT + " WHERE " +COLUMN_ACCOUNT_ID+" = "+accountNo+ " ;",null);
         if(res.getCount()==0) {
             db.close();
             return null;
