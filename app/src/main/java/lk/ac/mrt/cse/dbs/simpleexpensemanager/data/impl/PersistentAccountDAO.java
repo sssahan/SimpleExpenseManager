@@ -14,8 +14,8 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
  */
 public class PersistentAccountDAO implements AccountDAO{
     DBHandler dbHandler=null;
-    public PersistentAccountDAO(Context context){
-        dbHandler = DBHandler.getInstance(context);
+    public PersistentAccountDAO(DBHandler dbHandler){
+        this.dbHandler=dbHandler;
     }
     @Override
     public List<String> getAccountNumbersList() {
@@ -29,7 +29,13 @@ public class PersistentAccountDAO implements AccountDAO{
 
     @Override
     public Account getAccount(String accountNo) throws InvalidAccountException {
-        return dbHandler.getAccount(accountNo);
+        Account account = dbHandler.getAccount(accountNo);
+        if (account==null){
+            String msg = "The accountNo" + accountNo + " is invalid.";
+            throw new InvalidAccountException(msg);
+        }
+        return account;
+
     }
 
     @Override
@@ -39,11 +45,26 @@ public class PersistentAccountDAO implements AccountDAO{
 
     @Override
     public void removeAccount(String accountNo) throws InvalidAccountException {
-        dbHandler.removeAccount(accountNo);
+        if (!dbHandler.removeAccount(accountNo)){
+            String msg = "The accountNo "+ accountNo + " is invalid.";
+            throw new InvalidAccountException(msg);
+        }
+
     }
 
     @Override
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
-        dbHandler.updateBalance(accountNo,expenseType,amount);
+        Account account = getAccount(accountNo);
+        switch (expenseType){
+            case EXPENSE:
+                account.setBalance(account.getBalance()-amount);
+                break;
+            case INCOME:
+                account.setBalance(account.getBalance()+amount);
+                break;
+        }
+        dbHandler.updateBalance(account);
     }
+
 }
+

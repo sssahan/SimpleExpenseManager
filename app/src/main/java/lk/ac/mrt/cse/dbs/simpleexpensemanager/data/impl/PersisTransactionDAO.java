@@ -14,22 +14,23 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
  */
 public class PersisTransactionDAO implements TransactionDAO {
     DBHandler dbHandler=null;
-    public PersisTransactionDAO(Context context){
-        dbHandler=DBHandler.getInstance(context);
+    public PersisTransactionDAO(DBHandler dbHandler){
+        this.dbHandler=dbHandler;
     }
 
     @Override
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
-
+        Transaction transaction = new Transaction(date, accountNo, expenseType, amount);
+        dbHandler.addTransaction(transaction);
     }
 
     @Override
     public List<Transaction> getAllTransactionLogs() {
-        return null;
+        return dbHandler.getAllTransactions();
     }
 
     @Override
     public List<Transaction> getPaginatedTransactionLogs(int limit) {
-        return null;
+        return dbHandler.getPaginatedTransactions(limit);
     }
 }
