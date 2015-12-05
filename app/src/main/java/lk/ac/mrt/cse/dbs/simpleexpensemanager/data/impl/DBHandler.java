@@ -26,14 +26,14 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String TABLE_ACCOUNT = "account";
     public static final String TABLE_TRANSACTION = "transaction";
 
-    public static final String COLUMN_ID = "accountNo";
-    public static final String COLUMN_BANKNAME = "bankName";
-    public static final String COLUMN_ACHOLDERNAME = "accountHolderName";
+    public static final String COLUMN_ACCOUNT_ID = "accountNo";
+    public static final String COLUMN_BANK_NAME = "bankName";
+    public static final String COLUMN_AC_HOLDER_NAME = "accountHolderName";
     public static final String COLUMN_BALANCE="balance";
 
-    public static final String COLUMN_ACCOUNT = "accountNo";
+    public static final String COLUMN_ACCOUNT_NO = "accountNo";
     public static final String COLUMN_DATE = "date";
-    public static final String COLUMN_EXPENCETYPE="expenseType";
+    public static final String COLUMN_EXPENCE_TYPE="expenseType";
     public static final String COLUMN_AMOUNT = "amount";
 
     private DBHandler(Context context) {
@@ -53,14 +53,14 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_ACCOUNT_TABLE = "CREATE TABLE " +
                 TABLE_ACCOUNT  + "("
-                + COLUMN_ID + " TEXT PRIMARY KEY," + COLUMN_BANKNAME
-                + " TEXT NOT NULL," + COLUMN_ACHOLDERNAME +"TEXT NOT NULL,"+ COLUMN_BALANCE+" INTEGER" + ")";
+                + COLUMN_ACCOUNT_ID + " TEXT PRIMARY KEY," + COLUMN_BANK_NAME
+                + " TEXT NOT NULL," + COLUMN_AC_HOLDER_NAME +" TEXT NOT NULL,"+ COLUMN_BALANCE+" INTEGER" + ")";
         db.execSQL(CREATE_ACCOUNT_TABLE);
 
         String CREATE_TABLE_TRANSACTION  = "CREATE TABLE " +
                 TABLE_TRANSACTION   + "("
-                + COLUMN_ACCOUNT+ " TEXT," +  COLUMN_DATE
-                + " TEXT," + COLUMN_EXPENCETYPE +"REAL,"+ COLUMN_AMOUNT +" REAL" + ")";
+                + COLUMN_ACCOUNT_NO+ " TEXT," +  COLUMN_DATE
+                + " TEXT," + COLUMN_EXPENCE_TYPE +" REAL,"+ COLUMN_AMOUNT +" REAL" + ")";
         db.execSQL(CREATE_TABLE_TRANSACTION);
     }
 
@@ -75,9 +75,9 @@ public class DBHandler extends SQLiteOpenHelper {
     public List<String> getAccountNumbersList() {
         List<String> accList=new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "SELECT "+COLUMN_ID + " FROM " +TABLE_ACCOUNT + " ;",null);
+        Cursor res =  db.rawQuery( "SELECT "+COLUMN_ACCOUNT_ID + " FROM " +TABLE_ACCOUNT + " ;",null);
         while(res.isAfterLast() == false){
-            accList.add(res.getString(res.getColumnIndex(COLUMN_ID)));
+            accList.add(res.getString(res.getColumnIndex(COLUMN_ACCOUNT_ID)));
             res.moveToNext();
         }
         return accList;
@@ -86,11 +86,11 @@ public class DBHandler extends SQLiteOpenHelper {
     public List<Account> getAccountsList() {
         List<Account> accList=new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "SELECT "+COLUMN_ID + " FROM " +TABLE_ACCOUNT + " ;",null);
+        Cursor res =  db.rawQuery( "SELECT "+COLUMN_ACCOUNT_ID + " FROM " +TABLE_ACCOUNT + " ;",null);
         while(res.isAfterLast() == false){
-            int idIndex= res.getColumnIndex(COLUMN_ID);
-            int bankIndex=res.getColumnIndex(COLUMN_BANKNAME);
-            int accHolderIndex=res.getColumnIndex(COLUMN_ACHOLDERNAME);
+            int idIndex= res.getColumnIndex(COLUMN_ACCOUNT_ID);
+            int bankIndex=res.getColumnIndex(COLUMN_BANK_NAME);
+            int accHolderIndex=res.getColumnIndex(COLUMN_AC_HOLDER_NAME);
             int balanceIndex=res.getColumnIndex(COLUMN_BALANCE);
 
             Account account=new Account(res.getString(idIndex),res.getString(balanceIndex),res.getString(accHolderIndex),Double.valueOf(res.getString(balanceIndex)));
@@ -102,12 +102,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public Account getAccount(String accountNo){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "SELECT * FROM "+TABLE_ACCOUNT + " WHERE " +COLUMN_ID+"="+accountNo+ " ;",null);
+        Cursor res =  db.rawQuery( "SELECT * FROM "+TABLE_ACCOUNT + " WHERE " +COLUMN_ACCOUNT_ID+"="+accountNo+ " ;",null);
         if(res.getCount()==0)
             return null;
-        int idIndex= res.getColumnIndex(COLUMN_ID);
-        int bankIndex=res.getColumnIndex(COLUMN_BANKNAME);
-        int accHolderIndex=res.getColumnIndex(COLUMN_ACHOLDERNAME);
+        int idIndex= res.getColumnIndex(COLUMN_ACCOUNT_ID);
+        int bankIndex=res.getColumnIndex(COLUMN_BANK_NAME);
+        int accHolderIndex=res.getColumnIndex(COLUMN_AC_HOLDER_NAME);
         int balanceIndex=res.getColumnIndex(COLUMN_BALANCE);
 
         Account account=new Account(res.getString(idIndex),res.getString(balanceIndex),res.getString(accHolderIndex),Double.valueOf(res.getString(balanceIndex)));
@@ -117,20 +117,20 @@ public class DBHandler extends SQLiteOpenHelper {
     public void addAccount(Account account) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID,account.getAccountNo());
-        contentValues.put(COLUMN_BANKNAME,account.getBankName());
-        contentValues.put(COLUMN_ACHOLDERNAME,account.getAccountHolderName());
+        contentValues.put(COLUMN_ACCOUNT_ID,account.getAccountNo());
+        contentValues.put(COLUMN_BANK_NAME,account.getBankName());
+        contentValues.put(COLUMN_AC_HOLDER_NAME,account.getAccountHolderName());
         contentValues.put(COLUMN_BALANCE,account.getBalance());
     }
 
     public void removeAccount(String accountNo){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_ACCOUNT, COLUMN_ID + " = " + accountNo, null);
+        db.delete(TABLE_ACCOUNT, COLUMN_ACCOUNT_ID + " = " + accountNo, null);
     }
 
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res =  db.rawQuery("SELECT "+COLUMN_BALANCE+" FROM " + TABLE_ACCOUNT + " WHERE " + COLUMN_ID + "=" + accountNo + " ;", null);
+        Cursor res =  db.rawQuery("SELECT "+COLUMN_BALANCE+" FROM " + TABLE_ACCOUNT + " WHERE " + COLUMN_ACCOUNT_ID + "=" + accountNo + " ;", null);
         if(res.getCount()==0)
             return;
         double balance=Double.valueOf(res.getString(res.getColumnIndex(COLUMN_BALANCE)));
@@ -145,7 +145,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db=this.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put(COLUMN_BALANCE,balance);
-        db.update(TABLE_ACCOUNT, contentValues, COLUMN_ID + " = " + accountNo, null);
+        db.update(TABLE_ACCOUNT, contentValues, COLUMN_ACCOUNT_ID + " = " + accountNo, null);
     }
 
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
